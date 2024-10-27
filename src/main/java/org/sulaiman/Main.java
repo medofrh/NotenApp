@@ -2,6 +2,8 @@ package org.sulaiman;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        DB database = new DB();
+
+        database.connect();
     }
 }
