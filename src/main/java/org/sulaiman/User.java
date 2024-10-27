@@ -16,30 +16,11 @@ public class User {
     private String geburtsdatum;
     private String telefonnummer;
     private String strasse;
-    private String hausnummer;
     private String plz;
     private String ort;
+    private String status;
     private boolean role = false;
     private DB db = new DB();
-
-    /* public User(int userId, String vorname, String nachname, String username, String password, String email, String geburtsdatum, String telefonnummer, String strasse, String hausnummer, String plz, String ort, String role) {
-        this.userId = userId;
-        this.vorname = vorname;
-        this.nachname = nachname;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.geburtsdatum = geburtsdatum;
-        this.telefonnummer = telefonnummer;
-        this.strasse = strasse;
-        this.hausnummer = hausnummer;
-        this.plz = plz;
-        this.ort = ort;
-        this.role = role;
-
-        this.connection = connection;
-        DB db = new DB();
-    } */
     public User(String username, String password, boolean role) {
         this.username = username;
         this.password = password;
@@ -66,7 +47,11 @@ public class User {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0; // If count > 0, credentials are correct
+                // close connection
+                db.close();
+
+                this.updateUserData();
+                return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,5 +68,86 @@ public class User {
     public void changePassword (String newPassword){
 
     };
+
+    private void updateUserData (){
+        String sql;
+        if(this.role){
+            sql = "SELECT * FROM lehrer WHERE username = ? AND password = ?";
+        }else{
+            sql = "SELECT * FROM schueler WHERE username = ? AND password = ?";
+        }
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, this.username);
+            pstmt.setString(2, this.password); // Passwords should be hashed in a real application!
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                this.userId = rs.getInt("ID");
+                this.vorname = rs.getString("vorname");
+                this.nachname = rs.getString("nachname");
+                this.email = rs.getString("email");
+                this.geburtsdatum = rs.getString("geburtsdatum");
+                this.telefonnummer = rs.getString("telefonnummer");
+                this.strasse = rs.getString("anschrift");
+                this.plz = rs.getString("plz");
+                this.ort = rs.getString("stadt");
+                this.status = rs.getString("status");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getVorname() {
+        return vorname;
+    }
+
+    public String getNachname() {
+        return nachname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getGeburtsdatum() {
+        return geburtsdatum;
+    }
+
+    public String getTelefonnummer() {
+        return telefonnummer;
+    }
+
+    public String getStrasse() {
+        return strasse;
+    }
+
+    public String getPlz() {
+        return plz;
+    }
+
+    public String getOrt() {
+        return ort;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public boolean getRole() {
+        return role;
+    }
 }
 

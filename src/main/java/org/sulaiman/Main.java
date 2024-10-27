@@ -32,7 +32,11 @@ public class Main {
                 password = scanner.nextLine();
 
                 User lehrer = new User(username,password,true);
-                System.out.println(lehrer.login());
+                if(lehrer.login()){
+                    System.out.println("Wilkommen Herr "+lehrer.getNachname());
+                }else{
+                    System.out.println("Falsche Anmeldedaten, bitte versuchen Sie es erneut.");
+                }
             } else {
                 scanner.nextLine();
                 clearScreen();
