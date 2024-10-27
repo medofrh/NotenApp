@@ -3,7 +3,7 @@ create database if not exists db_lib;
 use db_lib;
 
 create table schueler (
-    schueler_id INT PRIMARY KEY AUTO_INCREMENT,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     vorname VARCHAR(100) NOT NULL,
     nachname VARCHAR(100) NOT NULL,
     geburtsdatum DATE NOT NULL,
@@ -20,7 +20,7 @@ create table schueler (
 );
 
 create table lehrer (
-    lehrer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ID INT PRIMARY KEY AUTO_INCREMENT,
     vorname VARCHAR(100) NOT NULL,
     nachname VARCHAR(100) NOT NULL,
     geburtsdatum DATE NOT NULL,
@@ -69,7 +69,7 @@ create table klasse (
     bildungsgang_id INT,
     lehrer_id INT,
     FOREIGN KEY (bildungsgang_id) REFERENCES bildungsgang(bildungsgang_id),
-    FOREIGN KEY (lehrer_id) REFERENCES lehrer(lehrer_id)
+    FOREIGN KEY (lehrer_id) REFERENCES lehrer(ID)
 );
 
 create table noten (
@@ -83,12 +83,12 @@ create table noten (
     bildungsgang_id INT,
     halbjahr ENUM('1', '2') NOT NULL,
     lehrer_id INT,
-    FOREIGN KEY (schueler_id) REFERENCES schueler(schueler_id),
+    FOREIGN KEY (schueler_id) REFERENCES schueler(id),
     FOREIGN KEY (fach_id) REFERENCES fach(fach_id),
     FOREIGN KEY (klassen_id) REFERENCES klasse(klasse_id),
     FOREIGN KEY (notenart_id) REFERENCES notenart(notenart_id),
     FOREIGN KEY (bildungsgang_id) REFERENCES bildungsgang(bildungsgang_id),
-    FOREIGN KEY (lehrer_id) REFERENCES lehrer(lehrer_id)
+    FOREIGN KEY (lehrer_id) REFERENCES lehrer(ID)
 );
 
 create table Zeugnisnote (
@@ -99,8 +99,8 @@ create table Zeugnisnote (
     wert DECIMAL(5, 2) NOT NULL,
     lehrer_id INT,
     datum DATE NOT NULL,
-    FOREIGN KEY (schueler_id) REFERENCES schueler(schueler_id),
+    FOREIGN KEY (schueler_id) REFERENCES schueler(id),
     FOREIGN KEY (fach_id) REFERENCES fach(fach_id),
     FOREIGN KEY (klasse_id) REFERENCES klasse(klasse_id),
-    FOREIGN KEY (lehrer_id) REFERENCES lehrer(lehrer_id)
+    FOREIGN KEY (lehrer_id) REFERENCES lehrer(ID)
 );
