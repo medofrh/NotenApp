@@ -24,8 +24,19 @@ public class DB {
 
     private Connection getConnection() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
-            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
+            // Load MySQL JDBC driver explicitly if necessary
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                System.out.println("MySQL JDBC Driver not found");
+                e.printStackTrace();
+            }
+
+            // Enhanced URL with additional properties
+            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database +
+                    "?useSSL=false&serverTimezone=UTC";
             this.connection = DriverManager.getConnection(url, this.username, this.password);
+            System.out.println("Connected to the database");
         }
         return this.connection;
     }
@@ -34,14 +45,19 @@ public class DB {
         try {
             this.connection = getConnection();
         } catch (SQLException e) {
+            System.out.println("Failed to connect to the database");
             e.printStackTrace();
         }
     }
 
     public void close() {
         try {
-            this.connection.close();
+            if (this.connection != null && !this.connection.isClosed()) {
+                this.connection.close();
+                System.out.println("Database connection closed.");
+            }
         } catch (SQLException e) {
+            System.out.println("Error closing the database connection");
             e.printStackTrace();
         }
     }
