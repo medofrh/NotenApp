@@ -22,7 +22,7 @@ public class DB {
         this.port = Integer.parseInt(dotenv.get("DB_PORT"));
     }
 
-    private Connection getConnection() throws SQLException {
+    public Connection connect() throws SQLException {
         if (this.connection == null || this.connection.isClosed()) {
             // Load MySQL JDBC driver explicitly if necessary
             try {
@@ -36,18 +36,8 @@ public class DB {
             String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database +
                     "?useSSL=false&serverTimezone=UTC";
             this.connection = DriverManager.getConnection(url, this.username, this.password);
-            System.out.println("Connected to the database");
         }
         return this.connection;
-    }
-
-    public void connect() {
-        try {
-            this.connection = getConnection();
-        } catch (SQLException e) {
-            System.out.println("Failed to connect to the database");
-            e.printStackTrace();
-        }
     }
 
     public void close() {
