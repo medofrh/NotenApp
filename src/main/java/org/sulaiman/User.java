@@ -47,8 +47,6 @@ public class User {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                // close connection
-                db.close();
 
                 this.updateUserData();
                 return rs.getInt(1) > 0;

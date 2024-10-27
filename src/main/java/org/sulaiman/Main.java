@@ -47,7 +47,11 @@ public class Main {
                 password = scanner.nextLine();
 
                 User schueler = new User(username,password,false);
-                System.out.println(schueler.login());
+                if(schueler.login()){
+                    System.out.println("Wilkommen Herr "+schueler.getNachname());
+                }else{
+                    System.out.println("Falsche Anmeldedaten, bitte versuchen Sie es erneut.");
+                }
             }
 
         } else if (option == 2) {
