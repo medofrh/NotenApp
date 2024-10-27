@@ -1,15 +1,20 @@
 package org.sulaiman;
 
-import java.sql.Connection;
 import io.github.cdimascio.dotenv.Dotenv;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DB {
-    private Dotenv dotenv = Dotenv.load();
     private Connection connection;
-    private String username,password, host, database;
-    private int port;
+    private final String username;
+    private final String password;
+    private final String host;
+    private final String database;
+    private final int port;
 
-    public DB(){
+    public DB() {
+        Dotenv dotenv = Dotenv.load();
         this.username = dotenv.get("DB_USER");
         this.password = dotenv.get("DB_PASS");
         this.host = dotenv.get("DB_HOST");
@@ -17,12 +22,27 @@ public class DB {
         this.port = Integer.parseInt(dotenv.get("DB_PORT"));
     }
 
-    public void connect(){
-        System.out.println("Connecting to database...");
-        System.out.println("Username: " + this.username);
-        System.out.println("Password: " + this.password);
-        System.out.println("Host: " + this.host);
-        System.out.println("Database: " + this.database);
-        System.out.println("Port: " + this.port);
+    private Connection getConnection() throws SQLException {
+        if (this.connection == null || this.connection.isClosed()) {
+            String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
+            this.connection = DriverManager.getConnection(url, this.username, this.password);
+        }
+        return this.connection;
+    }
+
+    public void connect() {
+        try {
+            this.connection = getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -5,5 +5,6 @@ public class Main {
         DB database = new DB();
 
         database.connect();
+        database.close();
     }
 }
